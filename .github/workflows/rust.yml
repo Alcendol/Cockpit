@@ -27,6 +27,9 @@ jobs:
         with:
           components: clippy, rustfmt
 
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install --yes libfontconfig1-dev
+
       - name: Cache Cargo files
         uses: Swatinem/rust-cache@v2
 
