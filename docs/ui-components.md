@@ -18,7 +18,7 @@ Cockpit uses Slint, a declarative, component-based UI toolkit. A Slint component
 - Make a split when it clarifies responsibility or reduces file growth, not for every condition or a few lines of bindings. Keep related page-specific files together; promote a component to a shared UI location only when it is actually reused.
 - Give each piece of frontend state one clear owner. Pass state through explicit properties and user intent through callbacks; avoid maintaining duplicate copies without a defined synchronization direction.
 - Keep filesystem, Git, process, persistence, and other operating-system or application-service responsibilities in Rust. Connect those through explicit, typed component properties and callbacks rather than reproducing those responsibilities in Slint.
-- Do not perform potentially slow filesystem or process work directly in a Slint callback. Run it away from the UI event loop, then dispatch owned results back through Slint's event-loop API. Before applying a result, verify that it still corresponds to the current workspace and requested location.
+- Do not perform potentially slow filesystem or process work directly in a Slint callback. Run it away from the UI event loop, then dispatch owned results back through Slint's event-loop API. Before applying a result, verify that it still corresponds to the current workspace and requested location. Only supersede pending work when a valid replacement operation starts; ignored or unsupported actions must leave pending results intact.
 - Represent loading, empty, success, and error states explicitly when relevant to the page or component.
 - Keep components deterministic from their declared inputs where practical; this makes them easier to reuse, preview, and test.
 

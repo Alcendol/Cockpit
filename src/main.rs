@@ -46,7 +46,6 @@ fn main() -> Result<(), slint::PlatformError> {
         let active_project = Arc::clone(&active_project);
         let request_generation = Arc::clone(&request_generation);
         app.on_entry_selected(move |path, is_directory| {
-            let request_id = next_request_id(&request_generation);
             if !is_directory {
                 if let Some(app) = app_weak.upgrade() {
                     app.set_error_message(
@@ -64,6 +63,7 @@ fn main() -> Result<(), slint::PlatformError> {
                 return;
             };
 
+            let request_id = next_request_id(&request_generation);
             start_project_operation(
                 app_weak.clone(),
                 Arc::clone(&active_project),
@@ -83,7 +83,6 @@ fn main() -> Result<(), slint::PlatformError> {
         let active_project = Arc::clone(&active_project);
         let request_generation = Arc::clone(&request_generation);
         app.on_parent_requested(move || {
-            let request_id = next_request_id(&request_generation);
             let Some(mut project) = active_project
                 .lock()
                 .expect("active project mutex should not be poisoned")
@@ -92,6 +91,7 @@ fn main() -> Result<(), slint::PlatformError> {
                 return;
             };
 
+            let request_id = next_request_id(&request_generation);
             start_project_operation(
                 app_weak.clone(),
                 Arc::clone(&active_project),
