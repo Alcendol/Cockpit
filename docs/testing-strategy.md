@@ -31,8 +31,10 @@ Use equivalence classes and boundary analysis for large or unbounded input space
 
 ## Test placement and fixtures
 
-- Keep Rust unit tests near the implementation using `#[cfg(test)]` where that improves locality.
-- Put Rust integration tests in `tests/` when they should exercise the crate through its public or application-facing boundary.
+- Keep test cases in files separate from production implementation files. Do not append a `#[cfg(test)] mod tests { ... }` block containing test cases to the implementation file. Rust needs a small `#[cfg(test)] mod tests;` declaration in the implementation module to include its separate unit-test file; keep that declaration free of test case bodies.
+- For Rust unit tests that need access to private module behavior, declare the test submodule under `#[cfg(test)]` and put its contents in a separate child file. For example, `src/project.rs` can declare `#[cfg(test)] mod tests;` and keep the cases in `src/project/tests.rs`. This retains unit-test access to the module while keeping production and test code in separate files.
+- Put Rust integration tests in separate files under `tests/` when they should exercise the crate through its public or application-facing boundary. Use descriptive filenames by behavior or feature, such as `tests/project_open.rs`.
+- Keep test file and test function names descriptive and consistent with [naming guidance](naming-guidance.md).
 - Keep test fixtures minimal, deterministic, and free of credentials or personal data. Generate temporary files and repositories at runtime where feasible.
 - Do not duplicate the same assertion across layers unless each test establishes a distinct contract.
 - When fixing a bug, add a regression test that reproduces the reported or discovered failure and passes with the fix. Prefer a test that fails against the pre-fix behavior. If the bug cannot be reproduced in an automated test, explain why and record the closest reliable manual verification.
