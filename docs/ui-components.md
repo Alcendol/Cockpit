@@ -18,6 +18,7 @@ Cockpit uses Slint, a declarative, component-based UI toolkit. A Slint component
 - Make a split when it clarifies responsibility or reduces file growth, not for every condition or a few lines of bindings. Keep related page-specific files together; promote a component to a shared UI location only when it is actually reused.
 - Give each piece of frontend state one clear owner. Pass state through explicit properties and user intent through callbacks; avoid maintaining duplicate copies without a defined synchronization direction.
 - Keep filesystem, Git, process, persistence, and other operating-system or application-service responsibilities in Rust. Connect those through explicit, typed component properties and callbacks rather than reproducing those responsibilities in Slint.
+- Do not perform potentially slow filesystem or process work directly in a Slint callback. Run it away from the UI event loop, then dispatch owned results back through Slint's event-loop API. Before applying a result, verify that it still corresponds to the current workspace and requested location. Only supersede pending work when a valid replacement operation starts; ignored or unsupported actions must leave pending results intact.
 - Represent loading, empty, success, and error states explicitly when relevant to the page or component.
 - Keep components deterministic from their declared inputs where practical; this makes them easier to reuse, preview, and test.
 
@@ -26,6 +27,7 @@ Cockpit uses Slint, a declarative, component-based UI toolkit. A Slint component
 - Compose larger screens from standard Slint widgets and Cockpit components; avoid duplicating substantial markup for the same visual behavior.
 - Use layout containers and constraints rather than fixed positioning when content or window size can vary.
 - Consider minimum and useful window sizes, text expansion, empty content, and resizing when designing a component.
+- Bound dynamic text such as filesystem paths with wrapping or elision so long values do not set an excessive minimum width or hide required controls. Inspect the layout at a narrow window size as well as a typical size.
 - Keep visual styling consistent with existing UI tokens and patterns. Introduce shared style properties or helpers when repeated values acquire a meaningful design role; do not create a design system for isolated values without a use case.
 - Keep accessibility and interaction states visible: controls should have clear labels, disabled states should reflect actual availability, and focus/keyboard behavior should remain usable.
 
