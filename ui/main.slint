@@ -1,4 +1,10 @@
-import { Button, VerticalBox } from "std-widgets.slint";
+import { Button, ScrollView, VerticalBox } from "std-widgets.slint";
+
+export struct ProjectEntry {
+    name: string,
+    path: string,
+    is_directory: bool,
+}
 
 export component MainWindow inherits Window {
     title: "Cockpit";
@@ -6,47 +12,110 @@ export component MainWindow inherits Window {
     height: 720px;
     background: #111318;
 
+    in property <string> project-name: "";
+    in property <string> project-root: "";
+    in property <string> current-directory: "";
+    in property <string> error-message: "";
+    in property <bool> has-parent: false;
+    in property <[ProjectEntry]> entries: [];
+
+    callback open-project-requested();
+    callback entry-selected(string, bool);
+    callback parent-requested();
+
     VerticalBox {
         spacing: 16px;
         padding: 24px;
 
-        Text {
-            text: "Cockpit";
-            color: #f1f3f8;
-            font-size: 28px;
-            font-weight: 700;
+        HorizontalLayout {
+            alignment: space-between;
+            Text {
+                text: "Cockpit";
+                color: #f1f3f8;
+                font-size: 28px;
+                font-weight: 700;
+            }
+            Button {
+                text: project-name == "" ? "Open folder…" : "Change folder…";
+                clicked => { root.open-project-requested(); }
+            }
         }
 
-        Text {
-            text: "A lightweight control panel for reviewing and finishing code changes.";
-            color: #aab0be;
-            font-size: 14px;
-        }
-
-        Rectangle {
+        if project-name == "": Rectangle {
             background: #1b1f28;
             border-radius: 10px;
-            min-height: 220px;
             VerticalBox {
                 alignment: center;
                 spacing: 12px;
                 padding: 24px;
                 Text {
-                    text: "Your workspace is ready";
+                    text: "Open a project folder to get started";
                     color: #f1f3f8;
                     font-size: 18px;
                     font-weight: 600;
                 }
                 Text {
-                    text: "Repository review, diffs, quick edits, and terminal tasks will live here.";
+                    text: "Cockpit will show its files here. Opening a folder does not run its contents.";
+                    color: #aab0be;
+                    font-size: 13px;
+                }
+            }
+        }
+
+        if project-name != "": VerticalBox {
+            spacing: 8px;
+            Text {
+                text: project-name;
+                color: #f1f3f8;
+                font-size: 20px;
+                font-weight: 600;
+            }
+            Text {
+                text: project-root;
+                color: #777f90;
+                font-size: 12px;
+            }
+            HorizontalLayout {
+                alignment: space-between;
+                Text {
+                    text: current-directory;
                     color: #aab0be;
                     font-size: 13px;
                 }
                 Button {
-                    text: "Open a repository";
-                    enabled: false;
+                    text: "Up";
+                    enabled: has-parent;
+                    clicked => { root.parent-requested(); }
                 }
             }
+            Rectangle {
+                background: #1b1f28;
+                border-radius: 8px;
+                min-height: 400px;
+                ScrollView {
+                    VerticalBox {
+                        spacing: 2px;
+                        padding: 8px;
+                        for entry in entries: Button {
+                            text: entry.is_directory ? entry.name + "/" : entry.name;
+                            horizontal-stretch: 1;
+                            clicked => { root.entry-selected(entry.path, entry.is_directory); }
+                        }
+                        if entries.length == 0: Text {
+                            text: "This folder is empty.";
+                            color: #aab0be;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+            }
+        }
+
+        if error-message != "": Text {
+            text: error-message;
+            color: #ff9b9b;
+            wrap: word-wrap;
         }
     }
 }
