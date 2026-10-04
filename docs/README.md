@@ -2,6 +2,8 @@
 
 This directory contains the detailed working agreements referenced by the repository's [`AGENTS.md`](../AGENTS.md). Read the docs relevant to your task; the developer workflow and iteration shape apply to every change.
 
+Slash-activatable agent skills for these workflows live in [`../.agents/skills/`](../.agents/skills/). Use `/change-review` to carry out change review and `/address-review-feedback` to collect, validate, and resolve reviewer feedback.
+
 | Document | Use it for |
 | --- | --- |
 | [Product plan](product-plan.md) | Core capabilities, scope boundaries, and suggested delivery order |
