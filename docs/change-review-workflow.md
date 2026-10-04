@@ -6,7 +6,9 @@ Before handing off implementation work, inspect the change as a reviewer would, 
 
 - Inspect `git status` and preserve unrelated user changes.
 - Identify the active integration branch from the task/PR target or repository configuration. Do not assume it is named `main`.
+- Before every review, refresh the integration branch from its remote. Fetch the remote's configured refs (for example, `git fetch origin`) and compare against the refreshed remote-tracking reference (for example, `origin/main`). If the local integration branch also needs updating, only fast-forward it with `git pull --ff-only <remote> <base>` while that branch is checked out and its worktree is clean; never run that pull while on the topic branch.
 - Compare the topic branch with that base using the merge base where available, so the review covers changes introduced by the topic branch and not unrelated base-branch commits.
+- Do not merge or rebase the topic branch just to refresh the review baseline. Use the refreshed remote-tracking reference as the comparison base; update the topic branch only when the task separately requires it.
 - If the target branch cannot be determined or is not available locally, state the assumed base and limitation rather than silently comparing against an arbitrary branch.
 - Review the complete diff, including untracked files that are part of the work. Check for accidental generated output, unrelated formatting, and missing documentation.
 
