@@ -24,15 +24,8 @@ cargo clippy --all-targets --all-features -- -D warnings
 cargo check --all-targets --all-features
 ```
 
-Install the repository hook:
-
-```sh
-git config core.hooksPath .githooks
-```
-
-Or install the pre-commit-managed hook:
+Install the optional pre-commit hook:
 
 ```sh
 pre-commit install
 ```
-
