@@ -1,0 +1,19 @@
+[package]
+name = "cockpit"
+version = "0.1.0"
+edition = "2024"
+description = "A lightweight desktop cockpit for reviewing and finishing code changes"
+license = "MIT"
+
+[dependencies]
+slint = "1.17"
+
+[build-dependencies]
+slint-build = "1.17"
+
+[lints.rust]
+unsafe_code = "deny"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }

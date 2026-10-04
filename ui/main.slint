@@ -1,0 +1,52 @@
+import { Button, VerticalBox } from "std-widgets.slint";
+
+export component MainWindow inherits Window {
+    title: "Cockpit";
+    width: 1100px;
+    height: 720px;
+    background: #111318;
+
+    VerticalBox {
+        spacing: 16px;
+        padding: 24px;
+
+        Text {
+            text: "Cockpit";
+            color: #f1f3f8;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        Text {
+            text: "A lightweight control panel for reviewing and finishing code changes.";
+            color: #aab0be;
+            font-size: 14px;
+        }
+
+        Rectangle {
+            background: #1b1f28;
+            border-radius: 10px;
+            min-height: 220px;
+            VerticalBox {
+                alignment: center;
+                spacing: 12px;
+                padding: 24px;
+                Text {
+                    text: "Your workspace is ready";
+                    color: #f1f3f8;
+                    font-size: 18px;
+                    font-weight: 600;
+                }
+                Text {
+                    text: "Repository review, diffs, quick edits, and terminal tasks will live here.";
+                    color: #aab0be;
+                    font-size: 13px;
+                }
+                Button {
+                    text: "Open a repository";
+                    enabled: false;
+                }
+            }
+        }
+    }
+}
