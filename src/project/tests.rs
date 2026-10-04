@@ -92,3 +92,21 @@ fn omits_symlinks_from_project_entries() {
 
     assert_eq!(entries.len(), 0);
 }
+
+#[cfg(unix)]
+#[test]
+fn skips_non_utf8_names_without_hiding_readable_entries() {
+    use std::ffi::OsString;
+    use std::os::unix::ffi::OsStringExt;
+
+    let temp = TempDirectory::new();
+    fs::write(temp.0.join("readable.txt"), "text").unwrap();
+    let non_utf8_name = OsString::from_vec(vec![b'n', b'o', b'n', b'-', 0xff]);
+    fs::write(temp.0.join(non_utf8_name), "text").unwrap();
+
+    let project = Project::open(&temp.0).unwrap();
+    let entries = project.entries().unwrap();
+
+    assert_eq!(entries.len(), 1);
+    assert_eq!(entries[0].name, "readable.txt");
+}

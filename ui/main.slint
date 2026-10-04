@@ -74,6 +74,7 @@ export component MainWindow inherits Window {
                 text: project-root;
                 color: #777f90;
                 font-size: 12px;
+                overflow: elide;
             }
             HorizontalLayout {
                 alignment: space-between;
@@ -81,6 +82,7 @@ export component MainWindow inherits Window {
                     text: current-directory;
                     color: #aab0be;
                     font-size: 13px;
+                    overflow: elide;
                 }
                 Button {
                     text: "Up";

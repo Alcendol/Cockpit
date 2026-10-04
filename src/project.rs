@@ -2,7 +2,7 @@ use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Project {
     root: PathBuf,
     current_directory: PathBuf,
@@ -92,12 +92,9 @@ fn read_entries(path: &Path) -> io::Result<Vec<ProjectEntry>> {
             continue;
         }
 
-        let name = entry.file_name().into_string().map_err(|_| {
-            io::Error::new(
-                io::ErrorKind::InvalidData,
-                "A project entry has a name that cannot be represented by the interface.",
-            )
-        })?;
+        let Ok(name) = entry.file_name().into_string() else {
+            continue;
+        };
         entries.push(ProjectEntry {
             name,
             path: entry.path(),
